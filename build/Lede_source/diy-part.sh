@@ -28,10 +28,15 @@ sed -i "s/OpenWrt /大灰狼 $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ    
 sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ                                                            # 设置密码为空
 
 sed -i 's/PATCHVER:=5.4/PATCHVER:=5.10/g' target/linux/x86/Makefile                              # 默认内核5.10，修改内核为5.4
-curl -fsSL  https://raw.githubusercontent.com/279437541/openwrt-package/usb/block/10-mount > files/etc/hotplug.d/block/10-mount
+
+
+curl -fsSL  https://raw.githubusercontent.com/279437541/openwrt-package/usb/block/10-mount > files/etc/hotplug.d/block/10-mount  #USB驱动
+
+
 # K3专用，编译K3的时候只会出K3固件
-#sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm_k3|TARGET_DEVICES += phicomm_k3|' target/linux/bcm53xx/image/Makefile
-git clone https://github.com/linkease/nas-packages package/luci-app-ddnsto
+
+#sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm-k3|TARGET_DEVICES += phicomm-k3|' target/linux/bcm53xx/image/Makefile
+
 
 # 修改插件名字
 sed -i 's/"aMule设置"/"电驴下载"/g' `grep "aMule设置" -rl ./`
