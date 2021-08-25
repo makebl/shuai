@@ -65,7 +65,7 @@ jobs:
     - name: 公 告
       run: |
         echo
-        git clone --depth 1 -b main https://github.com/281677160/common build/common > /dev/null 2>&1
+        git clone --depth 1 -b main https://github.com/279437541/common build/common > /dev/null 2>&1
         chmod -R +x "${GITHUB_WORKSPACE}/build/common"
         if [[ "${REPO_BRANCH}" == "master" ]]; then
           echo "ZZZ=package/lean/default-settings/files/zzz-default-settings" >> $GITHUB_ENV
@@ -220,6 +220,7 @@ jobs:
         cp -Rf bin/targets/*/* "${Home}"/upgrade
         cd bin/targets/*/*
         find -name "*buildinfo*" | xargs -i rm -rf {}
+        find -name "*rootfs*" | xargs -i rm -rf {}
         find -name "*sha256sums*" | xargs -i rm -rf {}
         find -name "*manifest*" | xargs -i rm -rf {}
         find -name "*vmlinuz*" | xargs -i rm -rf {}
