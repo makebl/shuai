@@ -142,7 +142,11 @@ jobs:
           source "${PATH1}/upgrade.sh" && Diy_Part1
         fi
         
-
+    - name: 缓存加速
+      uses: klever1988/cachewrtbuild@main
+      with:
+        ccache: 'true'
+        prefix: ${{ github.workspace }}/openwrt     
    
         
         
