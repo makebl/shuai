@@ -104,13 +104,7 @@ jobs:
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
-        
-    - name: Clone source code
-      working-directory: /workdir
-      run: |
-        df -hT $PWD
-        git clone $REPO_URL -b $REPO_BRANCH openwrt
-        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+      
 
     - name: 下载"${{matrix.target}}"源码
       working-directory: /workdir
@@ -122,7 +116,11 @@ jobs:
         echo "Home=${GITHUB_WORKSPACE}/openwrt" >> $GITHUB_ENV
         echo "PATH1=${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}" >> $GITHUB_ENV
         
-        
+    - name: Cache
+      uses: klever1988/cachewrtbuild@main
+      with:
+        ccache: 'true'
+        prefix: ${{ github.workspace }}/openwrt     
 
     
 
@@ -150,6 +148,15 @@ jobs:
         if [[ "${REGULAR_UPDATE}" == "true" ]]; then
           source "${PATH1}/upgrade.sh" && Diy_Part1
         fi
+        
+    - name: Clone source code
+      working-directory: /workdir
+      run: |
+        df -hT $PWD
+        git clone $REPO_URL -b $REPO_BRANCH openwrt
+        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+   
+        
         
     - name: SSH远程连接（配置固件）
       uses: danshui-git/debugger-action@master
