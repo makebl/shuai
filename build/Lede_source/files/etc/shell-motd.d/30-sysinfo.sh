@@ -122,7 +122,7 @@ sys_tempx=`echo $sys_temp | sed 's/ / /g'`
 printf "CPU 型号:  \x1B[92m%s\x1B[0m" "$sys_tempx"
 echo ""
 
-printf "CPU 信息:  \x1B[92m%s\x1B[0m" "$cpu_temp"
+printf "CPU 信息: \x1B[92m%s\x1B[0m" "$cpu_temp"
 echo ""
 
 display "系统负载" "${load%% *}" "${critical_load}" "0" "" "${load#* }"
