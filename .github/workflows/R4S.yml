@@ -5,7 +5,7 @@
 # Copyright (C) 2019 P3TERX <https://p3terx.com>
 # <https://github.com/P3TERX/Actions-OpenWrt.git>
 #
-name: 编译OpenWrtxR4s固件
+name: 编译OpenWrtxR4S固件
 on:
   workflow_dispatch:
     inputs:
@@ -14,9 +14,9 @@ on:
         required: false
         default: 'ssh-actions'
 
-#定时触发开始编译(把下面两个#去掉开启,时间设置请看定时编译说明)
+# 定时触发开始编译(把下面两个#去掉开启,时间设置请看定时编译说明)
   schedule:
-   - cron: 0 3 */6 * *
+   - cron: 0 16 */3 * *
 
 env:
   Github: https://github.com/${{github.repository}}
@@ -65,7 +65,7 @@ jobs:
     - name: 公 告
       run: |
         echo
-        git clone --depth 1 -b main https://github.com/279437541/common build/common > /dev/null 2>&1
+        git clone --depth 1 -b main https://github.com/shidahuilang/common build/common > /dev/null 2>&1
         chmod -R +x "${GITHUB_WORKSPACE}/build/common"
         if [[ "${REPO_BRANCH}" == "master" ]]; then
           echo "ZZZ=package/lean/default-settings/files/zzz-default-settings" >> $GITHUB_ENV
@@ -81,6 +81,7 @@ jobs:
           echo "OpenWrt_name=21.02" >> $GITHUB_ENV
         fi
         echo "NETIP=package/base-files/files/etc/networkip" >> $GITHUB_ENV
+        echo "DELETE=package/base-files/files/etc/deletefile" >> $GITHUB_ENV
         if [ -n "$(ls -A build/common/0809gg 2>/dev/null)" ]; then
           source build/common/common.sh && Diy_gonggao
         else
@@ -102,16 +103,16 @@ jobs:
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
-        sudo mkdir -p /workdir
-        sudo chown $USER:$GROUPS /workdir
-
+        sudo mkdir -p /${{matrix.target}}
+        sudo chown $USER:$GROUPS /${{matrix.target}}
+    
     - name: 下载"${{matrix.target}}"源码
-      working-directory: /workdir
+      working-directory: /${{matrix.target}}
       run: |
         git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
         cd openwrt
         ./scripts/feeds update -a > /dev/null 2>&1
-        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        ln -sf /${{matrix.target}}/openwrt $GITHUB_WORKSPACE/openwrt
         echo "Home=${GITHUB_WORKSPACE}/openwrt" >> $GITHUB_ENV
         echo "PATH1=${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}" >> $GITHUB_ENV
  
@@ -139,12 +140,12 @@ jobs:
         if [[ "${REGULAR_UPDATE}" == "true" ]]; then
           source "${PATH1}/upgrade.sh" && Diy_Part1
         fi
-        
-    - name: 缓存加速
-      uses: klever1988/cachewrtbuild@test
-      with:
-        ccache: 'true'
-        prefix: ${{ github.workspace }}/openwrt
+    
+    #- name: 缓存加速(7天内二次编译有效)
+     # uses: klever1988/cachewrtbuild@test
+      #with:
+      #  ccache: 'true'
+      #  prefix: ${{ github.workspace }}/openwrt
         
     - name: SSH远程连接（配置固件）
       uses: danshui-git/debugger-action@master
@@ -180,7 +181,7 @@ jobs:
           source "${PATH1}/upgrade.sh" && Diy_Part2 > /dev/null 2>&1
         fi
         if [ "${BY_INFORMATION}" == "true" ]; then
-          source "${PATH1}/upgrade.sh" > /dev/null 2>&1
+          source "${PATH1}/upgrade.sh" && GET_TARGET_INFO
           source "${PATH1}/common.sh" && Diy_xinxi
         fi
 
