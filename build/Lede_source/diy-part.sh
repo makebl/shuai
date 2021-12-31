@@ -28,7 +28,7 @@ sed -i "s/OpenWrt /大灰狼 $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ    
 sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ                                                            # 设置密码为空
 
 #sed -i 's/PATCHVER:=5.4/PATCHVER:=5.10/g' target/linux/x86/Makefile                              # 默认内核5.10，修改内核为5.4
-
+sed -i 's/KERNEL_PATCHVER:=5.10/KERNEL_TESTING_PATCHVER:=5.15/g' target/linux/x86/Makefile
 
 curl -fsSL  https://raw.githubusercontent.com/279437541/openwrt-package/usb/block/10-mount > files/etc/hotplug.d/block/10-mount  #USB驱动
 
