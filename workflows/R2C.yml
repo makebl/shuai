@@ -72,7 +72,7 @@ jobs:
     - name: 公 告
       run: |
         echo
-        git clone --depth 1 -b main https://github.com/shidahuilang/common build/common > /dev/null 2>&1
+        git clone --depth 1 -b main https://github.com/279437541/common build/common > /dev/null 2>&1
         chmod -R +x "${GITHUB_WORKSPACE}/build/common"
         if [[ "${REPO_BRANCH}" == "master" ]]; then
           echo "ZZZ=package/lean/default-settings/files/zzz-default-settings" >> $GITHUB_ENV
