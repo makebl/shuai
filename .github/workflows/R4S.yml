@@ -5,7 +5,7 @@
 # Copyright (C) 2019 P3TERX <https://p3terx.com>
 # <https://github.com/P3TERX/Actions-OpenWrt.git>
 #
-name: 编译OpenWrtxR4S固件
+name: 编译OpenWrtxR4s固件
 on:
   workflow_dispatch:
     inputs:
@@ -13,10 +13,18 @@ on:
         description: 'SSH远程'
         required: false
         default: 'ssh-actions'
+      older-actions:
+        description: 'true-actions改true开启清理Actions空间'
+        required: false
+        default: 'true-actions'
+      older-releases:
+        description: 'true-actions改true开启删除releases'
+        required: false
+        default: 'true-actions'
 
 # 定时触发开始编译(把下面两个#去掉开启,时间设置请看定时编译说明)
   #schedule:
-   #- cron: 0 16 */3 * *
+   #- cron: 0 16 */5 * *
 
 env:
   Github: https://github.com/${{github.repository}}
@@ -61,7 +69,6 @@ jobs:
         echo "BY_INFORMATION=${BY_INFORMATION}" >> $GITHUB_ENV
         echo "CangKu=${Apidz##*/}" >> $GITHUB_ENV
         echo "Modelfile=${{matrix.target}}" >> $GITHUB_ENV
-
     - name: 公 告
       run: |
         echo
@@ -87,12 +94,28 @@ jobs:
         else
           source build/common/common.sh && Diy_tongzhi
         fi
+    - name: 清理Actions空间
+      if: env.OLDER_WORKFLOW == 'true' || (github.event.inputs.older-actions == 'true')
+      uses: Mattraks/delete-workflow-runs@main
+      with:
+        token: ${{ github.token }}
+        repository: ${{ github.repository }}       
+        retain_days: 0.5
+        keep_minimum_runs: 0
+    
+    - name: 删除releases,可设置保留数
+      if: env.OLDER_RELEASES == 'true' || (github.event.inputs.older-releases == 'true')
+      uses: dev-drprasad/delete-older-releases@master
+      with:
+        keep_latest: 5         # 保留多少个发布不删除
+        delete_tags: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}        
 
     - name: 电报机器人信息通知
       if: env.SERVERCHAN_SCKEY == 'true'
       run: |
         curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=🎉 主人：您正在使用【${{matrix.target}}】文件夹编译固件中(${{env.CangKu}}仓库的#${{env.Run_number}}号),请耐心等待...... 😋" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
-
     - name: 部署编译环境
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -143,9 +166,9 @@ jobs:
     
     #- name: 缓存加速(7天内二次编译有效)
      # uses: klever1988/cachewrtbuild@test
-      #with:
-      #  ccache: 'true'
-      #  prefix: ${{ github.workspace }}/openwrt
+     # with:
+     #   ccache: 'true'
+     #   prefix: ${{ github.workspace }}/openwrt
         
     - name: SSH远程连接（配置固件）
       uses: danshui-git/debugger-action@master
@@ -173,9 +196,9 @@ jobs:
         fi
         
     - name: 编译信息
+      continue-on-error: true
       run: |
         cd openwrt
-        ./scripts/diffconfig.sh > ${GITHUB_WORKSPACE}/config.txt
         source "${PATH1}/common.sh" && Diy_chuli > /dev/null 2>&1
         if [ "${REGULAR_UPDATE}" == "true" ]; then
           source "${PATH1}/upgrade.sh" && Diy_Part2 > /dev/null 2>&1
@@ -184,7 +207,7 @@ jobs:
           source "${PATH1}/upgrade.sh" && GET_TARGET_INFO
           source "${PATH1}/common.sh" && Diy_xinxi
         fi
-
+        
     - name: 上传.config配置文件在 github actions
       uses: actions/upload-artifact@v2
       if: env.UPLOAD_CONFIG == 'true'
@@ -199,7 +222,6 @@ jobs:
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
-
     - name: 开始编译固件
       id: compile
       run: |
@@ -209,7 +231,6 @@ jobs:
         echo "::set-output name=status::success"
         echo "date=$(date "+%Y%m%d%H%M%S")" >> $GITHUB_ENV
         echo "date1=$(date +'%m.%d')" >> $GITHUB_ENV
-
     - name: 上传bin文件夹(固件+ipk)在 github actions
       uses: actions/upload-artifact@v2
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
@@ -236,7 +257,6 @@ jobs:
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "BOT=TRUE" >> $GITHUB_ENV
         echo "::set-output name=status::success"
-
     - name: 上传固件在 github actions
       uses: actions/upload-artifact@v2
       if: steps.organizer.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true'

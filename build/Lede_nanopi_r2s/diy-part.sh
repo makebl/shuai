@@ -22,7 +22,7 @@ sed -i "/uci commit system/i\uci set system.@system[0].hostname='OpenWrt-DHL'" $
 
 sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ                                                            # 设置密码为空
 
-#sed -i 's/PATCHVER=5.4/PATCHVER=5.10/g' target/linux/rockchip/Makefile                             # 默认内核5.10，修改内核为5.4
+sed -i 's/PATCHVER=5.4/PATCHVER=5.10/g' target/linux/rockchip/Makefile                             # 默认内核5.10，修改内核为5.4
 
 
 # 修改插件名字

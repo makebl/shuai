@@ -11,7 +11,7 @@ sed -i "/uci commit network/i\uci set network.lan.broadcast='192.168.2.255'" $ZZ
 sed -i "/uci commit network/i\uci set network.lan.dns='114.114.114.114 223.5.5.5'" $ZZZ           # DNS(多个DNS要用空格分开)
 #sed -i "/uci commit network/i\uci set network.lan.delegate='0'" $ZZZ                              # 去掉LAN口使用内置的 IPv6 管理
 
-sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile           # 选择argon为默认主题
+sed -i 's/luci-theme-bootstrap/luci-theme-opentomcat/g' feeds/luci/collections/luci/Makefile           # 选择argon为默认主题
 
 sed -i "s/OpenWrt /大灰狼  $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ          # 增加个性名字${Author}默认为你的github账号
 

@@ -84,8 +84,8 @@ tls:
   private_key_path: ""
 filters:
 - enabled: true
-  url: https://gitee.com/halflife/list/raw/master/ad.txt
-  name: "1"
+  url: https://raw.githubusercontent.com/dallaslu/penzai-list/main/uBlacklist.txt
+  name: "百科"
   id: 1625890935
 - enabled: true
   url: https://filters.adtidy.org/android/filters/3_optimized.txt

@@ -14,9 +14,9 @@ on:
         required: false
         default: 'ssh-actions'
 
-#定时触发开始编译(把下面两个#去掉开启,时间设置请看定时编译说明)
-#  schedule:
-#   - cron: 0 16 */2 * *
+# 定时触发开始编译(把下面两个#去掉开启,时间设置请看定时编译说明)
+  #schedule:
+  # - cron: 0 16 */3 * *
 
 env:
   Github: https://github.com/${{github.repository}}
@@ -61,7 +61,6 @@ jobs:
         echo "BY_INFORMATION=${BY_INFORMATION}" >> $GITHUB_ENV
         echo "CangKu=${Apidz##*/}" >> $GITHUB_ENV
         echo "Modelfile=${{matrix.target}}" >> $GITHUB_ENV
-
     - name: 公 告
       run: |
         echo
@@ -81,17 +80,16 @@ jobs:
           echo "OpenWrt_name=21.02" >> $GITHUB_ENV
         fi
         echo "NETIP=package/base-files/files/etc/networkip" >> $GITHUB_ENV
+        echo "DELETE=package/base-files/files/etc/deletefile" >> $GITHUB_ENV
         if [ -n "$(ls -A build/common/0809gg 2>/dev/null)" ]; then
           source build/common/common.sh && Diy_gonggao
         else
           source build/common/common.sh && Diy_tongzhi
         fi
-
     - name: 电报机器人信息通知
       if: env.SERVERCHAN_SCKEY == 'true'
       run: |
         curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=🎉 主人：您正在使用【${{matrix.target}}】文件夹编译固件中(${{env.CangKu}}仓库的#${{env.Run_number}}号),请耐心等待...... 😋" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
-
     - name: 部署编译环境
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -102,16 +100,16 @@ jobs:
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
-        sudo mkdir -p /workdir
-        sudo chown $USER:$GROUPS /workdir
-
+        sudo mkdir -p /${{matrix.target}}
+        sudo chown $USER:$GROUPS /${{matrix.target}}
+    
     - name: 下载"${{matrix.target}}"源码
-      working-directory: /workdir
+      working-directory: /${{matrix.target}}
       run: |
         git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
         cd openwrt
         ./scripts/feeds update -a > /dev/null 2>&1
-        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        ln -sf /${{matrix.target}}/openwrt $GITHUB_WORKSPACE/openwrt
         echo "Home=${GITHUB_WORKSPACE}/openwrt" >> $GITHUB_ENV
         echo "PATH1=${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}" >> $GITHUB_ENV
  
@@ -139,12 +137,8 @@ jobs:
         if [[ "${REGULAR_UPDATE}" == "true" ]]; then
           source "${PATH1}/upgrade.sh" && Diy_Part1
         fi
-        
-    - name: 缓存加速
-      uses: klever1988/cachewrtbuild@test
-      with:
-        ccache: 'true'
-        prefix: ${{ github.workspace }}/openwrt
+    
+
         
     - name: SSH远程连接（配置固件）
       uses: danshui-git/debugger-action@master
@@ -172,18 +166,18 @@ jobs:
         fi
         
     - name: 编译信息
+      continue-on-error: true
       run: |
         cd openwrt
-        ./scripts/diffconfig.sh > ${GITHUB_WORKSPACE}/config.txt
         source "${PATH1}/common.sh" && Diy_chuli > /dev/null 2>&1
         if [ "${REGULAR_UPDATE}" == "true" ]; then
           source "${PATH1}/upgrade.sh" && Diy_Part2 > /dev/null 2>&1
         fi
         if [ "${BY_INFORMATION}" == "true" ]; then
-          source "${PATH1}/upgrade.sh" > /dev/null 2>&1
+          source "${PATH1}/upgrade.sh" && GET_TARGET_INFO
           source "${PATH1}/common.sh" && Diy_xinxi
         fi
-
+        
     - name: 上传.config配置文件在 github actions
       uses: actions/upload-artifact@v2
       if: env.UPLOAD_CONFIG == 'true'
@@ -198,7 +192,6 @@ jobs:
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
-
     - name: 开始编译固件
       id: compile
       run: |
@@ -208,7 +201,6 @@ jobs:
         echo "::set-output name=status::success"
         echo "date=$(date "+%Y%m%d%H%M%S")" >> $GITHUB_ENV
         echo "date1=$(date +'%m.%d')" >> $GITHUB_ENV
-
     - name: 上传bin文件夹(固件+ipk)在 github actions
       uses: actions/upload-artifact@v2
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
@@ -235,7 +227,6 @@ jobs:
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "BOT=TRUE" >> $GITHUB_ENV
         echo "::set-output name=status::success"
-
     - name: 上传固件在 github actions
       uses: actions/upload-artifact@v2
       if: steps.organizer.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true'
