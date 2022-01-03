@@ -1,4 +1,4 @@
-name: 编译OpenWrtxR2c固件
+name: R2c固件
 on:
   workflow_dispatch:
   push:
