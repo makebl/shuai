@@ -7,7 +7,7 @@
 #
 
 
-name: 同步上游仓库
+name: 同步大灰狼仓库
 on:
   workflow_dispatch:
     inputs:
@@ -44,7 +44,7 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE
         echo "BILDYML=$(grep "again-fork" -rl ${GITHUB_WORKSPACE}/.github |cut -d "/" -f9)" >> $GITHUB_ENV
-        git clone -b main https://github.com/279437541/shuai_ge.git shangyou
+        git clone -b main https://github.com/shidahuilang/langlang.git shangyou
         git clone -b main https://github.com/${{github.repository}}.git repogx
         if [[ -d repogx/build/Lede_source ]];then
           rm -rf shangyou/build/Lede_source/.config
@@ -158,7 +158,7 @@ jobs:
         cp -Rf $GITHUB_WORKSPACE/shangyou/* ./
         cp -Rf $GITHUB_WORKSPACE/shangyou/.github/workflows/* .github/workflows
         git add .
-        git commit -m "同步上游279437541/shuai_ge于$(date +%Y年%m月%d号%H时%M分%S秒)" |tee build.log
+        git commit -m "同步上游shidahuilang/langlang于$(date +%Y年%m月%d号%H时%M分%S秒)" |tee build.log
         if [[ `grep -c "Your branch is up to date with" build.log` == '1' ]]; then
           echo "配置文件无更新,所以无需要覆盖!"
         else
