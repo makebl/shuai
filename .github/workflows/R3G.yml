@@ -1,4 +1,4 @@
-name: R2c
+name: R3g
 on:
   workflow_dispatch:
     inputs:
@@ -41,7 +41,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [Lede_nanopi_r2c]
+        target: [Lede_opewrtR3G]
         
         # [Lede_source,Lede_opewrtR3G,Lede_nanopi_r2s,Lede_nanopi_r4s,Lede_nanopi_r2c,Lienol_source,Mortal_source,Tianling_source,openwrt_amlogic]
 

@@ -22,7 +22,7 @@ sed -i "/uci commit system/i\uci set system.@system[0].hostname='OpenWrt-DHL'" $
 
 sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ                                                            # 设置密码为空
 
-#sed -i 's/PATCHVER=5.4/PATCHVER=5.10/g' target/linux/rockchip/Makefile                             # 默认内核5.10，修改内核为5.4
+sed -i 's/PATCHVER=5.4/PATCHVER=5.10/g' target/linux/rockchip/Makefile                             # 默认内核5.10，修改内核为5.4
 
 
 # 修改插件名字
@@ -37,3 +37,12 @@ sed -i 's/"Web 管理"/"Web"/g' `grep "Web 管理" -rl ./`
 sed -i 's/"管理权"/"改密码"/g' `grep "管理权" -rl ./`
 sed -i 's/"带宽监控"/"监控"/g' `grep "带宽监控" -rl ./`
 sed -i 's/"Argon 主题设置"/"Argon设置"/g' `grep "Argon 主题设置" -rl ./`
+
+# 整理固件包时候,删除您不想要的固件或者文件,让它不需要上传到Actions空间
+cat >${GITHUB_WORKSPACE}/Clear <<-EOF
+rm -rf config.buildinfo
+rm -rf feeds.buildinfo
+rm -rf sha256sums
+rm -rf version.buildinfo
+rm -rf manifest
+EOF
