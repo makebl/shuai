@@ -1,12 +1,1 @@
-Github=https://github.com/shidahuilang/langlang
-Luci_Edition=
-CURRENT_Version=
-DEFAULT_Device=
-Firmware_Type=
-LUCI_Name=
-REPO_Name=
-Github_Release=https://github.com/shidahuilang/langlang/releases/download/AutoUpdate
-Egrep_Firmware=
-Download_Path=/tmp/Downloads
-Version=V6.5
-Download_Tags=/tmp/Downloads/Github_Tags
+
