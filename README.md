@@ -7,6 +7,9 @@ cd openwrt && make menuconfig
 ```
 - 结束ctrl+d
 
+- 云编译需要 [在此](https://github.com/settings/tokens) 创建个token,勾选：repo, workflow，保存所得的key
+- 然后在此仓库Settings->Secrets中添加个名字为REPO_TOKEN的Secret,填入token获得的key,否者无法触发编译
+
 ## 自动更新固件
 首先需要打开 Openwrt 主页,点击系统-TTYD 终端或命令窗,或者使用putty按需输入下方指令:
 
