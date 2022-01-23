@@ -123,8 +123,6 @@ jobs:
         ln -sf /${{matrix.target}}/openwrt $GITHUB_WORKSPACE/openwrt
         echo "Home=${GITHUB_WORKSPACE}/openwrt" >> $GITHUB_ENV
         echo "PATH1=${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}" >> $GITHUB_ENV
-    
-
  
     - name: 加载源,补丁和自定义设置
       run: |
@@ -177,18 +175,18 @@ jobs:
           echo "TARGET_PROFILE=armvirt" >> $GITHUB_ENV
         fi
         
-    - name: 编译信息
-      continue-on-error: true
-      run: |
-        cd openwrt
-        source "${PATH1}/common.sh" && Diy_chuli > /dev/null 2>&1
-        if [ "${REGULAR_UPDATE}" == "true" ]; then
-          source "${PATH1}/upgrade.sh" && Diy_Part2 > /dev/null 2>&1
-        fi
-        if [ "${BY_INFORMATION}" == "true" ]; then
-          source "${PATH1}/upgrade.sh" && GET_TARGET_INFO
-          source "${PATH1}/common.sh" && Diy_xinxi
-        fi
+  #  - name: 编译信息
+    #  continue-on-error: true
+  #    run: |
+  #      cd openwrt
+   #     source "${PATH1}/common.sh" && Diy_chuli > /dev/null 2>&1
+   #     if [ "${REGULAR_UPDATE}" == "true" ]; then
+   #       source "${PATH1}/upgrade.sh" && Diy_Part2 > /dev/null 2>&1
+  #      fi
+  #      if [ "${BY_INFORMATION}" == "true" ]; then
+ #         source "${PATH1}/upgrade.sh" && GET_TARGET_INFO
+  #        source "${PATH1}/common.sh" && Diy_xinxi
+ #       fi
 
     - name: 下载软件包
       id: package
