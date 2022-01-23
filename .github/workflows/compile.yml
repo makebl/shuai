@@ -124,18 +124,7 @@ jobs:
         echo "Home=${GITHUB_WORKSPACE}/openwrt" >> $GITHUB_ENV
         echo "PATH1=${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}" >> $GITHUB_ENV
     
-    - name: Run AutoBuild_DiyScript.sh
-      run: |
-        chmod +x Scripts/AutoBuild_*.sh
-        cp $GITHUB_WORKSPACE/Configs/$CONFIG_FILE openwrt/.config
-        cd openwrt
-        make defconfig
-        source $GITHUB_WORKSPACE/Scripts/AutoBuild_DiyScript.sh
-        source $GITHUB_WORKSPACE/Scripts/AutoBuild_Function.sh
-        Firmware_Diy_Before
-        rm .config && cp $GITHUB_WORKSPACE/Configs/$CONFIG_FILE .config
-        Firmware_Diy_Main
-        Firmware_Diy
+
  
     - name: 加载源,补丁和自定义设置
       run: |
