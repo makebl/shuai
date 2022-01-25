@@ -89,7 +89,7 @@ jobs:
     - name: 读取扩展文件
       run: |
         echo
-        git clone --depth 1 -b main https://github.com/279437541/common build/common > /dev/null 2>&1
+        git clone --depth 1 -b main https://github.com/shidahuilang/common build/common > /dev/null 2>&1
         chmod -R +x "${GITHUB_WORKSPACE}/build/common"
         echo "BILDYML=$(grep "compileop" -rl ${GITHUB_WORKSPACE}/.github |cut -d "/" -f9)" >> $GITHUB_ENV
         echo "NETIP=package/base-files/files/etc/networkip" >> $GITHUB_ENV
@@ -159,6 +159,9 @@ jobs:
         ./scripts/feeds install -a > /dev/null 2>&1
         ./scripts/feeds install -a
         [[ -e "$PATH1/$CONFIG_FILE" ]] && mv "$PATH1/$CONFIG_FILE" .config
+        if [[ "${REGULAR_UPDATE}" == "true" ]]; then
+          source "${PATH1}/upgrade.sh" && Diy_Part1
+        fi
         
     - name: SSH远程连接（制作.config配置文件）
       if: env.SSH_ACTIONS == 'true' || (github.event.inputs.ssh == 'ssh')
