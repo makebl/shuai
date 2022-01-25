@@ -26,12 +26,20 @@ Compte=$(date +%Y年%m月%d号%H时%M分)
 # LEDE源码通用diy.sh文件
 ################################################################################################################
 Diy_lede() {
-#find . -name 'luci-app-netdata' -o -name 'netdata' -o -name 'luci-theme-argon' | xargs -i rm -rf {}
-rm -rf package/lean/luci-theme-argon
-rm -rf package/lean/luci-app-pushbot
-git clone https://github.com/GWen124/OpenWrt-Software package/GWen124
+find . -name 'luci-app-netdata' -o -name 'netdata' -o -name 'luci-theme-argon' -o -name 'mentohust' | xargs -i rm -rf {}
+find . -name 'luci-app-ipsec-vpnd' -o -name 'luci-app-wol' | xargs -i rm -rf {}
+find . -name 'luci-app-wrtbwmon' -o -name 'wrtbwmon' | xargs -i rm -rf {}
+find . -name 'UnblockNeteaseMusic-Go' -o -name 'UnblockNeteaseMusic' -o -name 'luci-app-unblockmusic' | xargs -i rm -rf {}
 
-if [[ "${Modelfile}" == "Lede_source" ]]; then
+sed -i '/to-ports 53/d' $ZZZ
+
+git clone https://github.com/xiaorouji/openwrt-passwall package/luci-app-passwall
+rm -rf package/luci-app-passwall/{v2ray-core,v2ray-plugin,xray-core,xray-plugin}
+git clone https://github.com/fw876/helloworld package/luci-app-ssr-plus
+
+sed -i "/exit 0/i\chmod +x /etc/webweb.sh && source /etc/webweb.sh" $ZZZ
+
+if [[ ! "${Modelfile}" == "openwrt_amlogic" ]]; then
 	sed -i '/IMAGES_GZIP/d' "${PATH1}/${CONFIG_FILE}" > /dev/null 2>&1
 	echo -e "\nCONFIG_TARGET_IMAGES_GZIP=y" >> "${PATH1}/${CONFIG_FILE}"
 fi
