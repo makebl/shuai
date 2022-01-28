@@ -89,7 +89,7 @@ jobs:
     - name: 读取扩展文件
       run: |
         echo
-        git clone --depth 1 -b main https://github.com/281677160/common build/common > /dev/null 2>&1
+        git clone --depth 1 -b main https://github.com/279437541/common build/common > /dev/null 2>&1
         chmod -R +x "${GITHUB_WORKSPACE}/build/common"
         echo "BILDYML=$(grep "compileop" -rl ${GITHUB_WORKSPACE}/.github |cut -d "/" -f9)" >> $GITHUB_ENV
         echo "NETIP=package/base-files/files/etc/networkip" >> $GITHUB_ENV
@@ -165,7 +165,7 @@ jobs:
         
     - name: SSH远程连接（制作.config配置文件）
       if: env.SSH_ACTIONS == 'true' || (github.event.inputs.ssh == 'ssh')
-      uses: danshui-git/debugger-action@master
+      uses: shidahuilang/debugger-action@master
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
