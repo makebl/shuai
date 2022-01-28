@@ -1,24 +1,13 @@
-# langlang
- 大灰狼编译库
-- 开始 ctrl+c 
-- 进ssh选择插件 
-``` bash
-cd openwrt && make menuconfig
-```
-- 结束ctrl+d
-
-- 云编译需要 [在此](https://github.com/settings/tokens) 创建个token,勾选：repo, workflow，保存所得的key
-- 然后在此仓库Settings->Secrets中添加个名字为REPO_TOKEN的Secret,填入token获得的key,否者无法触发编译
-
-## 自动更新固件
-首先需要打开 Openwrt 主页,点击系统-TTYD 终端或命令窗,或者使用putty按需输入下方指令:
-
-检查更新(保留配置): bash /bin/AutoUpdate.sh
-
-检查更新(不保留配置): bash /bin/AutoUpdate.sh -n
-
-更换其他作者固件(不保留配置): bash /bin/AutoUpdate.sh -g
-
-测试模式,观看运行步骤(不安装固件): bash /bin/AutoUpdate.sh -t
-
-查看详细信息和命令使用方法：bash /bin/AutoUpdate.sh -h
+- # 鸣谢
+> [`coolsnowwolf`](https://github.com/coolsnowwolf/lede.git)
+> [`Lienol`](https://github.com/Lienol/openwrt.git)
+> [`ctcgfw`](https://github.com/project-openwrt/openwrt.git)
+> [`P3TERX`](https://github.com/P3TERX/Actions-OpenWrt)
+> [`tuanqing`](https://github.com/tuanqing/mknop)
+> [`Hyy2001X`](https://github.com/Hyy2001X/AutoBuild-Actions)
+> [`ophub`](https://github.com/ophub/amlogic-s9xxx-openwrt)
+> [`nicholas-opensource`](https://github.com/nicholas-opensource/OpenWrt-Autobuild)
+> [`hx210`](#/README.md)
+> [`hyird`](#/README.md)
+> [`World Peace`](#/README.md)
+> [`感谢各位大佬提供的各种各样的插件`](#/README.md)
