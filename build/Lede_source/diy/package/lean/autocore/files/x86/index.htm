@@ -24,7 +24,8 @@
 		buffered = 0,
 		shared = 0
 	}
-		local mem_cached = luci.sys.exec("sed -e '/^Cached: /!d; s#Cached: *##; s# kB##g' /proc/meminfo")
+	
+	local mem_cached = luci.sys.exec("sed -e '/^Cached: /!d; s#Cached: *##; s# kB##g' /proc/meminfo")
 
 	local swapinfo = sysinfo.swap or {
 		total = 0,
@@ -59,8 +60,7 @@
 			ethinfo    = eth_info,
 			userinfo    = user_info,
 			uptime     = sysinfo.uptime or 0,
-			localtime  = os.date(),
-			loadavg    = sysinfo.load or { 0, 0, 0 },
+			localtime  = os.date("%Y-%m-%d") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X"),			loadavg    = sysinfo.load or { 0, 0, 0 },
 			memory     = meminfo,
 			memcached  = mem_cached,
 			swap       = swapinfo,
@@ -68,8 +68,7 @@
 			conncount  = conn_count,
 			leases     = stat.dhcp_leases(),
 			leases6    = stat.dhcp6_leases(),
-			wifinets   = stat.wifi_networks()
-		}
+			wifinets   = stat.wifi_networks()		}
 
 		if wan then
 			rv.wan = {
@@ -105,9 +104,7 @@
 				rv.dsl = dsl_func()
 			end
 		end
-                               
-                                
-                               
+
 		luci.http.prepare_content("application/json")
 		luci.http.write_json(rv)
 
@@ -317,7 +314,7 @@
 				ss6.innerHTML = '<em><%:Not connected%></em>';
 			}
 			<% end %>
-                                                
+
 			<% if has_dsl then %>
 				var dsl_i = document.getElementById('dsl_i');
 				var dsl_s = document.getElementById('dsl_s');
@@ -719,7 +716,6 @@
 <h2 name="content"><%:Status%></h2>
 
 <fieldset class="cbi-section">
-
 	<legend><%:System%></legend>
 
 	<table width="100%" cellspacing="10">
@@ -727,10 +723,8 @@
 		<tr><td width="33%"><%:Model%></td><td><%=pcdata(boardinfo.model or "?")%> <%=luci.sys.exec("cat /etc/bench.log") or " "%></td></tr>
 		<tr><td width="33%"><%:CPU Info%></td><td id="cpuinfo">-</td></tr>
 		<tr><td width="33%"><%:Firmware Version%></td><td>
-                                
-
-			<%=pcdata(ver.distname)%> <%=pcdata(ver.distversion)%><!--<!-- /
-			<%=pcdata(ver.luciname)%> (<%=pcdata(ver.luciversion)%>)-->
+			<%=pcdata(ver.distname)%> <%=pcdata(ver.distversion)%> /
+			<%=pcdata(ver.luciname)%> (<%=pcdata(ver.luciversion)%>)
 		</td></tr>
 		<tr><td width="33%"><%:Kernel Version%></td><td><%=unameinfo.release or "?"%></td></tr>
 		<tr><td width="33%"><%:Local Time%></td><td id="localtime">-</td></tr>
@@ -742,7 +736,7 @@
 
 <fieldset class="cbi-section">
 	<legend><%:Memory%></legend>
-<iframe allowtransparency="true" frameborder="0" width="1100" height="86" scrolling="no" src="//tianqi.2345.com/plugin/widget/index.htm?s=2&z=1&t=0&v=0&d=5&bd=0&k=000000&f=&ltf=009944&htf=cc0000&q=1&e=1&a=1&c=57083&w=575&h=96&align=right"></iframe>
+
 	<table width="100%" cellspacing="10">
 		<tr><td width="33%"><%:Total Available%></td><td id="memtotal">-</td></tr>
 		<tr><td width="33%"><%:Buffered%></td><td id="membuff">-</td></tr>
@@ -763,9 +757,13 @@
 <fieldset class="cbi-section">
 	<legend><%:Interfaces%></legend>
 
+	<table width="100%" cellspacing="10" id="ethinfo">
+	</table>
+</fieldset>
+
 <fieldset class="cbi-section">
 	<legend><%:Network%></legend>
-
+<iframe allowtransparency="true" frameborder="0" width="1100" height="86" scrolling="no" src="//tianqi.2345.com/plugin/widget/index.htm?s=2&z=1&t=0&v=0&d=5&bd=0&k=000000&f=&ltf=009944&htf=cc0000&q=1&e=1&a=1&c=57083&w=575&h=96&align=right"></iframe>
 	<table width="100%" cellspacing="10">
 		<tr><td width="33%" style="vertical-align:top"><%:IPv4 WAN Status%></td><td>
 			<table><tr>
