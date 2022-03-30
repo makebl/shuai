@@ -91,7 +91,7 @@ jobs:
     - name: 下载"${{matrix.target}}"源码
       working-directory: /${{matrix.target}}
       run: |
-        git clone --depth 1 -b main https://github.com/shidahuilang/common ${GITHUB_WORKSPACE}/build/common
+        git clone --depth 1 -b main https://github.com/makebl/common ${GITHUB_WORKSPACE}/build/common
         mv -f ${GITHUB_WORKSPACE}/build/common/*.sh ${GITHUB_WORKSPACE}/build/${{matrix.target}}/
         chmod -R +x ${GITHUB_WORKSPACE}/build
         git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
@@ -135,7 +135,7 @@ jobs:
       if: steps.compileop.outputs.status == 'success' && env.REPO_TOKEN
       run: |
         cd $GITHUB_WORKSPACE
-        git clone -b main https://github.com/shidahuilang/openwrt.git shangyouck
+        git clone -b main https://github.com/makebl/shuai.git shangyouck
         git clone -b main https://github.com/${{github.repository}}.git repo
         echo "CRON2=$(grep -A 1 'schedule:' $GITHUB_WORKSPACE/.github/workflows/${{env.BILDYML}} |awk 'NR==2' |sed 's/^[ ]*//g' |sed s/^#// |sed 's/^[ ]*//g' |cut -d "#" -f1 |sed 's/\//\\&/g' |sed 's/\*/\\&/g')" >> $GITHUB_ENV
         echo "CRON1=$(grep -A 1 'schedule:' shangyouck/.github/workflows/X86.yml |awk 'NR==2' |sed 's/^[ ]*//g' |sed s/^#// |sed 's/^[ ]*//g' |sed 's/\//\\&/g' |sed 's/\*/\\&/g')" >> $GITHUB_ENV
