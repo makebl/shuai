@@ -22,7 +22,7 @@ on:
 
 
 env:
-  BILDYML: 天灵.yml
+  BILDYML: Tianling.yml
   
   # 多开R2s.yml时把上面R2s.yml同步改成你新建立的文件名称
   # 比如你新建立的文件叫x86-openwrt.yml，你就把BILDYML: R2s.yml改成BILDYML: x86-openwrt.yml
