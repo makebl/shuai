@@ -8,7 +8,7 @@
 # 如果你有编译ipv6的话，‘去掉LAN口使用内置的 IPv6 管理’代码前面也加 # 注释掉
 
 git clone https://github.com/makebl/openwrt-package package/dalang
-svn co https://github.com/shidahuilang/OpenClash package/luci-app-xiaolaoshu
+# svn co https://github.com/shidahuilang/OpenClash package/luci-app-xiaolaoshu
 
 cat >$NETIP <<-EOF
 uci set network.lan.ipaddr='192.168.2.1'                      # IPv4 地址(openwrt后台地址)
