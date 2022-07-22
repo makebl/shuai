@@ -7,7 +7,7 @@
 # 如果你的OP是当主路由的话，网关、DNS、广播都不需要，代码前面加 # 注释掉，只保留后台地址和子网掩码就可以
 # 如果你有编译ipv6的话，‘去掉LAN口使用内置的 IPv6 管理’代码前面也加 # 注释掉
 
-git clone https://github.com/makebl/openwrt-package package/dalang
+#git clone https://github.com/makebl/openwrt-package package/dalang
 # svn co https://github.com/shidahuilang/OpenClash package/luci-app-xiaolaoshu
 
 cat >$NETIP <<-EOF
